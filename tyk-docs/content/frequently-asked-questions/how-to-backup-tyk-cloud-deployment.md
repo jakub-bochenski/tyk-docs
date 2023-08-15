@@ -1,6 +1,6 @@
 ---
 date: 2023-08-15T09:37:14+01:00
-title: How to backup Tyk Dashboard Configurations Within A Tyk Cloud Deployment
+title: How to Backup Tyk Dashboard Configurations Within A Tyk Cloud Deployment
 menu:
   main:
     parent: "Frequently Asked Questions"
