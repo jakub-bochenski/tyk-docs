@@ -10,7 +10,7 @@ menu:
 ## Introduction
 
 
-This page list down the supported MDCB version for hybrid setup
+This page lists the supported MDCB version for hybrid setup
 
 | Dashboard | Gateway | MDCB   |
 | --------- | ------- | ------ |
