@@ -87,51 +87,88 @@ Read more about Redis configuration [here](https://github.com/geerlingguy/ansibl
 {{< tab_end >}}
 {{< tab_start "Shell" >}}
 
+## Supported Distributions
+| Distribution | Version | Supported |
+| --------- | :---------: | :---------: |
+| Amazon Linux | 2 | ✅ |
+| CentOS | 8 | ✅ |
+| CentOS | 7 | ✅ |
+| RHEL | 8 | ✅ |
+| RHEL | 7 | ✅ |
+
 ## Requirements
 
 *   Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
-*   EPEL (Extra Packages for Enterprise Linux) is a free, community based repository project from Fedora which provides high quality add-on software packages for Linux distribution including RHEL, CentOS, and Scientific Linux. EPEL isn't a part of RHEL/CentOS but it is designed for major Linux distributions. In our case we need it for Redis. Install EPEL using the instructions [here](http://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F).
-
-## Install Redis using EPEL
+*   EPEL (Extra Packages for Enterprise Linux) is a free, community based repository project from Fedora which provides high quality add-on software packages for Linux distribution including RHEL, CentOS, and Scientific Linux. EPEL isn't a part of RHEL/CentOS but it is designed for major Linux distributions. In our case we need it for Redis. Install EPEL using the instructions [here](http://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F) or with the following commands.
 
 ```console
-$ sudo yum install -y redis
+sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+sudo yum install -y epel-release
+sudo yum update
 ```
+## Step 1: Set up YUM Repositories
 
-{{< note success >}}
-**Note**  
+We need to install software that allows us to use signed packages:
+```bash
+sudo yum install pygpgme yum-utils wget
+```
+## Step 2: Install Python
 
-You may be asked to accept the GPG key for our repos and when the package installs, click yes to continue.
-{{< /note >}}
-
-*   Tyk requires Python 3.4. Install via the following command:
+Tyk requires Python. Install via the following command:
 
 ```console
-$ sudo yum install python34
+$ sudo yum install python3
+```
+## Step 3: Create Tyk Gateway Repository Configuration
+
+Create a file named `/etc/yum.repos.d/tyk_tyk-gateway.repo` that contains the repository configuration settings for YUM repositories `tyk_tyk-gateway` and `tyk_tyk-gateway-source` used to download packages from the specified URLs, including GPG key verification and SSL settings, on a Linux system.
+
+Make sure to replace `el` and `8` in the config below with your Linux distribution and version:
+```bash
+[tyk_tyk-gateway]
+name=tyk_tyk-gateway
+baseurl=https://packagecloud.io/tyk/tyk-gateway/el/8/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/tyk/tyk-gateway/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
+
+[tyk_tyk-gateway-source]
+name=tyk_tyk-gateway-source
+baseurl=https://packagecloud.io/tyk/tyk-gateway/el/8/SRPMS
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packagecloud.io/tyk/tyk-gateway/gpgkey
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+metadata_expire=300
 ```
 
-### Start Redis
-
-In many cases Redis might not be running, so let's start that:
+Update your local yum cache by running:
 ```console
-$ sudo service redis start
+sudo yum -q makecache -y --disablerepo='*' --enablerepo='tyk_tyk-gateway'
 ```
 
-### Run Installation Scripts via our PackageCloud Repositories
+## Step 4: Install Packages
 
-From [https://packagecloud.io/tyk/tyk-gateway](https://packagecloud.io/tyk/tyk-gateway) you have the following options:
+We're ready to go, you can now install the relevant packages using yum:
+```bash
+sudo yum install -y redis tyk-gateway
+```
 
-* Via the correct package for your RHEL version. We have packages for the following:
- * RHEL 7
- * RHEL 6
- 
-* Via Quick Installation Instructions. You can use:
- * [Manual Instructions](https://packagecloud.io/tyk/tyk-gateway/install#manual-rpm)
- * [Chef](https://packagecloud.io/tyk/tyk-gateway/install#chef)
- * [Puppet](https://packagecloud.io/tyk/tyk-gateway/install#puppet)
- * [CI and Build Tools](https://packagecloud.io/tyk/tyk-gateway/ci)
+*(you may be asked to accept the GPG key for our two repos and when the package installs, hit yes to continue)*
 
-### Configuring The Gateway 
+### Step 5: Start Redis
+
+In many cases Redis will not be running, so let's start those:
+```bash
+sudo service redis start
+```
+## Step 6: Configuring The Gateway 
 
 You can set up the core settings for the Tyk Gateway with a single setup script, however for more involved deployments you will want to provide your own configuration file.
 
@@ -155,7 +192,7 @@ What you've done here is told the setup script that:
 
 In this example, you don't want Tyk to listen on a single domain. It is recommended to leave the Tyk Gateway domain unbounded for flexibility and ease of deployment.
 
-### Starting Tyk
+## Step 7: Starting Tyk
 
 The Tyk Gateway can be started now that it is configured. Use this command to start the Tyk Gateway:
 ```console
