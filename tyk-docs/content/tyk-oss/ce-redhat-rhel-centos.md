@@ -101,12 +101,6 @@ Read more about Redis configuration [here](https://github.com/geerlingguy/ansibl
 *   Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
 *   EPEL (Extra Packages for Enterprise Linux) is a free, community based repository project from Fedora which provides high quality add-on software packages for Linux distribution including RHEL, CentOS, and Scientific Linux. EPEL isn't a part of RHEL/CentOS but it is designed for major Linux distributions. In our case we need it for Redis. Install EPEL using the instructions [here](http://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F) or with the following commands.
 
-```console
-sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-sudo yum install -y epel-release
-sudo yum update
-```
-
 ## Step 1: Set up YUM Repositories
 
 We need to install software that allows us to use signed packages:
