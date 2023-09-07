@@ -106,12 +106,14 @@ sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noa
 sudo yum install -y epel-release
 sudo yum update
 ```
+
 ## Step 1: Set up YUM Repositories
 
 We need to install software that allows us to use signed packages:
 ```bash
 sudo yum install pygpgme yum-utils wget
 ```
+
 ## Step 2: Install Python
 
 Tyk requires Python. Install via the following command:
@@ -119,6 +121,7 @@ Tyk requires Python. Install via the following command:
 ```console
 $ sudo yum install python3
 ```
+
 ## Step 3: Create Tyk Gateway Repository Configuration
 
 Create a file named `/etc/yum.repos.d/tyk_tyk-gateway.repo` that contains the repository configuration settings for YUM repositories `tyk_tyk-gateway` and `tyk_tyk-gateway-source` used to download packages from the specified URLs. This includes GPG key verification and SSL settings, on a Linux system.
@@ -159,8 +162,11 @@ We're ready to go, you can now install the relevant packages using yum:
 ```bash
 sudo yum install -y redis tyk-gateway
 ```
+{{< note success >}}
+**Note**  
 
-*(you may be asked to accept the GPG key for our two repos and when the package installs, hit yes to continue)*
+You may be asked to accept the GPG key for our two repos and when the package installs, hit yes to continue.
+{{< /note >}}
 
 ## Step 5: Start Redis
 
