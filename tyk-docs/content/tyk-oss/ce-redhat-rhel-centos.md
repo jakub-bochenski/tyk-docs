@@ -121,7 +121,7 @@ $ sudo yum install python3
 ```
 ## Step 3: Create Tyk Gateway Repository Configuration
 
-Create a file named `/etc/yum.repos.d/tyk_tyk-gateway.repo` that contains the repository configuration settings for YUM repositories `tyk_tyk-gateway` and `tyk_tyk-gateway-source` used to download packages from the specified URLs, including GPG key verification and SSL settings, on a Linux system.
+Create a file named `/etc/yum.repos.d/tyk_tyk-gateway.repo` that contains the repository configuration settings for YUM repositories `tyk_tyk-gateway` and `tyk_tyk-gateway-source` used to download packages from the specified URLs. This includes GPG key verification and SSL settings, on a Linux system.
 
 Make sure to replace `el` and `8` in the config below with your Linux distribution and version:
 ```bash
