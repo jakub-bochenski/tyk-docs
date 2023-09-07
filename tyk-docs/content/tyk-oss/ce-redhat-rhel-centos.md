@@ -164,7 +164,7 @@ sudo yum install -y redis tyk-gateway
 
 ## Step 5: Start Redis
 
-In many cases Redis will not be running, so let's start those:
+If Redis is not running then start it using the following command:
 ```bash
 sudo service redis start
 ```
