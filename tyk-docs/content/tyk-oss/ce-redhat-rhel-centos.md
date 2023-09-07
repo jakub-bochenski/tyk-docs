@@ -162,7 +162,7 @@ sudo yum install -y redis tyk-gateway
 
 *(you may be asked to accept the GPG key for our two repos and when the package installs, hit yes to continue)*
 
-### Step 5: Start Redis
+## Step 5: Start Redis
 
 In many cases Redis will not be running, so let's start those:
 ```bash
