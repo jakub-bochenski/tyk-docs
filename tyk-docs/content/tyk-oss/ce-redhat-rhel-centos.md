@@ -100,7 +100,7 @@ Read more about Redis configuration [here](https://github.com/geerlingguy/ansibl
 
 *   Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
 *   EPEL (Extra Packages for Enterprise Linux) is a free, community based repository project from Fedora which provides high quality add-on software packages for Linux distribution including RHEL, CentOS, and Scientific Linux. EPEL isn't a part of RHEL/CentOS but it is designed for major Linux distributions. In our case we need it for Redis. Install EPEL using the instructions [here](http://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F)
-*   The Tyk Gateway has a dependencie on Redis find [here](https://tyk.io/docs/planning-for-production/redis/#supported-versions) the supported versions. Follow the steps provided by Red Hat to make the installation of Redis. You will need to search [here]([https://access.redhat.com/solutions/7006905](https://access.redhat.com/search/?q=redis)) the correct version and distribution.
+*   The Tyk Gateway has a dependencie on Redis find [here](https://tyk.io/docs/planning-for-production/redis/#supported-versions) the supported versions. Follow the steps provided by Red Hat to make the installation of Redis. You will need to search [here](https://access.redhat.com/search/?q=redis) the correct version and distribution.
 
 ## Step 1: Set up YUM Repositories
 
