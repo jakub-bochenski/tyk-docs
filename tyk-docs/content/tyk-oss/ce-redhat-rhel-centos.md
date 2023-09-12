@@ -11,6 +11,9 @@ aliases:
   - /tyk-oss/ce-centos/
   - /tyk-oss/ce-redhat/
 ---
+
+Tyk Gateway can be installed in RHEL following different installation methods including Ansible and Shell. Please select by clicking in the following tabs the most suitable for you.
+
 {{< tabs_start >}}
 {{< tab_start "Ansible" >}}
 
