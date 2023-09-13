@@ -197,7 +197,7 @@ What you've done here is told the setup script that:
 
 In this example, you don't want Tyk to listen on a single domain. It is recommended to leave the Tyk Gateway domain unbounded for flexibility and ease of deployment.
 
-## Step 7: Start the Tyk Gateway
+## Step 6: Start the Tyk Gateway
 
 The Tyk Gateway can be started now that it is configured. Use this command to start the Tyk Gateway:
 ```console
