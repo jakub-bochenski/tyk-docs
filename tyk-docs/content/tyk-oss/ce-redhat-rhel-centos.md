@@ -18,8 +18,9 @@ Tyk Gateway can be installed in RHEL following different installation methods in
 {{< tab_start "Ansible" >}}
 
 ## Requirements
+Before you begin the installation process, make sure you have the following:
 
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) - required for running the commands below. Use the **Shell** tab for instructions to install Tyk from a shell.
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) - required for running the commands below.
 - Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
 
 ## Getting Started
@@ -100,6 +101,8 @@ Read more about Redis configuration [here](https://github.com/geerlingguy/ansibl
 | RHEL | 7 | ✅ |
 
 ## Requirements
+
+Before you begin the installation process, make sure you have the following:
 
 *   Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
 *   EPEL (Extra Packages for Enterprise Linux) is a free, community based repository project from Fedora which provides high quality add-on software packages for Linux distribution including RHEL, CentOS, and Scientific Linux. EPEL isn't a part of RHEL/CentOS but it is designed for major Linux distributions. In our case we need it for Redis. Install EPEL using the instructions [here](http://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F)
