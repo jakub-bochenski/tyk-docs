@@ -20,6 +20,7 @@ Tyk Gateway can be installed in RHEL following different installation methods in
 ## Requirements
 Before you begin the installation process, make sure you have the following:
 
+- [Git](https://git-scm.com/download/linux) - required for getting the installation files.
 - [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) - required for running the commands below.
 - Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
 
