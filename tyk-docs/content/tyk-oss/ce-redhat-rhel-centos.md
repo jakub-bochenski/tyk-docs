@@ -53,8 +53,8 @@ $ ansible-playbook playbook.yaml -t tyk-gateway-ce -t redis
 **Note**  
 
 Installation flavors can be specified by using the -t {tag} at the end of the ansible-playbook command. In this case we are using:
--`tyk-gateway-ce`: Tyk Gateway with CE config
--`redis`: Redis database as Tyk Gateway dependency
+  -`tyk-gateway-ce`: Tyk Gateway with CE config
+  -`redis`: Redis database as Tyk Gateway dependency
 {{< /note >}}
 
 ## Supported Distributions
