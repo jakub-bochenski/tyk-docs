@@ -173,7 +173,7 @@ If Redis is not running then start it using the following command:
 ```bash
 sudo service redis start
 ```
-## Step 6: Configuring The Gateway 
+## Step 5: Configuring The Gateway 
 
 You can set up the core settings for the Tyk Gateway with a single setup script, however for more complex deployments you will want to provide your own configuration file.
 
