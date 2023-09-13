@@ -43,13 +43,18 @@ $ sh scripts/init.sh
 
 4. Modify the `hosts.yml` file to update ssh variables to your server(s). You can learn more about the hosts file [here](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
 
-5. Run ansible-playbook to install `tyk-ce`
+5. Run ansible-playbook to install `tyk-gateway-ce`
 
 ```console
-$ ansible-playbook playbook.yaml -t tyk-ce -t redis
+$ ansible-playbook playbook.yaml -t tyk-gateway-ce -t redis
 ```
+{{< note success >}}
+**Note**  
 
-You can choose to not install Redis by using `-t redis`. However Redis is a requirement and needs to be installed for the Tyk Gateway to run.
+Installation flavors can be specified by using the -t {tag} at the end of the ansible-playbook command. In this case we are using:
+-`tyk-gateway-ce`: Tyk Gateway with CE config
+-`redis`: Redis database as Tyk Gateway dependency
+{{< /note >}}
 
 ## Supported Distributions
 | Distribution | Version | Supported |
