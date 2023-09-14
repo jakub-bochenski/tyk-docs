@@ -143,7 +143,7 @@ metadata_expire=300
 ```
 
 Update your local yum cache by running:
-```console
+```bash
 sudo yum -q makecache -y --disablerepo='*' --enablerepo='tyk_tyk-gateway'
 ```
 
@@ -175,7 +175,7 @@ You can set up the core settings for the Tyk Gateway with a single setup script,
 Replace `<hostname>` in `--redishost=<hostname>` with your own value to run this script.
 {{< /note >}}
 
-```console
+```bash
 sudo /opt/tyk-gateway/install/setup.sh --listenport=8080 --redishost=<hostname> --redisport=6379 --domain=""
 ```
 
@@ -191,7 +191,7 @@ In this example, you don't want Tyk to listen on a single domain. It is recommen
 ## Step 5: Start the Tyk Gateway
 
 The Tyk Gateway can be started now that it is configured. Use this command to start the Tyk Gateway:
-```console
+```bash
 sudo service tyk-gateway start
 ```
 {{< tab_end >}}{{< tabs_end >}}
