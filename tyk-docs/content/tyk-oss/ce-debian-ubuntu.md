@@ -17,6 +17,14 @@ The Tyk Gateway can be installed following different installation methods includ
 {{< tabs_start >}}
 {{< tab_start "Shell" >}}
 
+## Supported Distributions
+| Distribution | Version | Supported |
+| --------- | :---------: | :---------: |
+| Debian | 11 | ✅ |
+| Ubuntu | 20 | ✅ |
+| Ubuntu | 18 | ✅ |
+| Ubuntu | 16 | ✅ |
+
 ## Requirements
 
 - Ensure port `8080` is open: this is used in this guide for Gateway traffic (the API traffic to be proxied).
@@ -158,7 +166,6 @@ Installation flavors can be specified by using the -t {tag} at the end of the an
 Read more about Redis configuration [here](https://github.com/geerlingguy/ansible-role-redis).
 
 {{< tab_end >}}
-
 {{< tabs_end >}}
 ## Next Steps Tutorials
 
