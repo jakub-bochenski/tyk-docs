@@ -14,6 +14,7 @@ aliases:
 
 Tyk Gateway can be installed in RHEL following different installation methods including *Ansible* and *Shell*. Please select by clicking the tab with the installation path most suitable for you.
 
+{{< tabs_start >}}
 {{< tab_start "Shell" >}}
 
 This installation was optimized for RHEL8 if you would like to install it in other distributions please contact us.
@@ -49,14 +50,14 @@ sudo yum update
 For different distributions than RHEL8 install EPEL using the instructions from [here](http://fedoraproject.org/wiki/EPEL#How_can_I_use_these_extra_packages.3F)
 {{< /note >}}
 
-## Step 1: Set up YUM Repositories
+## Step 2: Set up YUM Repositories
 
 We need to install software that allows us to use signed packages:
 ```bash
 sudo yum install pygpgme yum-utils wget
 ```
 
-## Step 2: Create Tyk Gateway Repository Configuration
+## Step 3: Create Tyk Gateway Repository Configuration
 
 Create a file named `/etc/yum.repos.d/tyk_tyk-gateway.repo` that contains the repository configuration settings for YUM repositories `tyk_tyk-gateway` and `tyk_tyk-gateway-source` used to download packages from the specified URLs. This includes GPG key verification and SSL settings, on a Linux system.
 
@@ -89,7 +90,7 @@ Update your local yum cache by running:
 ```console
 sudo yum -q makecache -y --disablerepo='*' --enablerepo='tyk_tyk-gateway'
 ```
-## Step : Install Redis 
+## Step 4: Install Redis 
 The Tyk Gateway has a dependencie on Redis find [here](https://tyk.io/docs/planning-for-production/redis/#supported-versions) the supported versions.
 
 Enable redis 6 module stream
@@ -110,7 +111,7 @@ sudo redis-server --version
 For different distributions than RHEL8 search [here](https://access.redhat.com/search/?q=redis) the installation steps
 {{< /note >}}
 
-## Step 3: Install Tyk Gateway
+## Step 5: Install Tyk Gateway
 
 Install the Tyk Gateway using yum:
 ```bash
@@ -122,13 +123,13 @@ sudo yum install -y tyk-gateway
 You may be asked to accept the GPG key for our two repos and when the package installs, hit yes to continue.
 {{< /note >}}
 
-## Step 4: Start Redis
+## Step 6: Start Redis
 
 If Redis is not running then start it using the following command:
 ```bash
 sudo service redis start
 ```
-## Step 5: Configuring The Gateway 
+## Step 7: Configuring The Gateway 
 
 You can set up the core settings for the Tyk Gateway with a single setup script, however for more complex deployments you will want to provide your own configuration file.
 
@@ -152,14 +153,13 @@ What you've done here is told the setup script that:
 
 In this example, you don't want Tyk to listen on a single domain. It is recommended to leave the Tyk Gateway domain unbounded for flexibility and ease of deployment.
 
-## Step 6: Start the Tyk Gateway
+## Step 8: Start the Tyk Gateway
 
 The Tyk Gateway can be started now that it is configured. Use this command to start the Tyk Gateway:
 ```console
 sudo service tyk-gateway start
 ```
 {{< tab_end >}}
-{{< tabs_start >}}
 {{< tab_start "Ansible" >}}
 
 ## Supported Distributions
