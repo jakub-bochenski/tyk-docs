@@ -12,10 +12,11 @@ aliases:
   - /tyk-oss/ce-redhat/
 ---
 
-Tyk Gateway can be installed in RHEL following different installation methods including *Ansible* and *Shell*. Please select by clicking the tab with the installation path most suitable for you.
+The Tyk Gateway can be installed following different installation methods including *Ansible* and *Shell*. Please select by clicking the tab with the installation path most suitable for you.
 
 {{< tabs_start >}}
 {{< tab_start "Shell" >}}
+
 
 This installation was optimized for RHEL8 if you would like to install it in other distributions please contact us.
 
@@ -53,7 +54,7 @@ For different distributions than RHEL8 install EPEL using the instructions from 
 ## Step 2: Set up YUM Repositories
 
 We need to install software that allows us to use signed packages:
-```bash
+```console
 sudo yum install pygpgme yum-utils wget
 ```
 
