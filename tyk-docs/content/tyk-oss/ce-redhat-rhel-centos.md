@@ -17,6 +17,16 @@ Tyk Gateway can be installed in RHEL following different installation methods in
 {{< tabs_start >}}
 {{< tab_start "Ansible" >}}
 
+
+## Supported Distributions
+| Distribution | Version | Supported |
+| --------- | :---------: | :---------: |
+| Amazon Linux | 2 | ✅ |
+| CentOS | 8 | ✅ |
+| CentOS | 7 | ✅ |
+| RHEL | 8 | ✅ |
+| RHEL | 7 | ✅ |
+
 ## Requirements
 Before you begin the installation process, make sure you have the following:
 
@@ -56,15 +66,6 @@ Installation flavors can be specified by using the -t {tag} at the end of the an
   -`tyk-gateway-ce`: Tyk Gateway with CE config
   -`redis`: Redis database as Tyk Gateway dependency
 {{< /note >}}
-
-## Supported Distributions
-| Distribution | Version | Supported |
-| --------- | :---------: | :---------: |
-| Amazon Linux | 2 | ✅ |
-| CentOS | 8 | ✅ |
-| CentOS | 7 | ✅ |
-| RHEL | 8 | ✅ |
-| RHEL | 7 | ✅ |
 
 ## Variables
 - `vars/tyk.yaml`
