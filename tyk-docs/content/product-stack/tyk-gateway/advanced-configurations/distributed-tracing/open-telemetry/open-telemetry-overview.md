@@ -5,7 +5,7 @@ tags: ["otel", "opentelemetry"]
 description: Overview page to introduce OpenTelemetry in Tyk
 ---
 
-Starting from Tyk Gateway version 5.2, you can leverage the power of OpenTelemetry, an open-source observability framework designed for cloud-native software, to enhance your API monitoring with end-to-end distributed tracing.
+Starting from Tyk Gateway version 5.2, you can leverage the power of OpenTelemetry, an open-source observability framework designed for cloud-native software. This enhances your API monitoring with end-to-end distributed tracing.
 
 This documentation will guide you through the process of enabling and configuring OpenTelemetry in Tyk Gateway. You'll also learn how to customize trace detail levels to meet your monitoring requirements.
 
