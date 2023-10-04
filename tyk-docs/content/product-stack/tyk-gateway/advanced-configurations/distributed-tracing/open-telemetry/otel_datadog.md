@@ -160,4 +160,4 @@ Datadog will generate a service entry to monitor Tyk API Gateway and will automa
 If you do not observe any traces appearing in Datadog, consider the following steps for resolution:
 
 - Logging: Examine logs from Tyk API Gateway and from the OpenTelemetry Collector for any issues or warnings that might provide insights.
-- Data Ingestion Delays: Be patient, as there could be some delay in data ingestion. Wait for 10 seconds to see if traces eventually appear, as this is the timeout we have configured in the batch processing of the OpenTelemetry collector in step 1.
+- Data Ingestion Delays: Be patient, as there could be some delay in data ingestion. Wait for 10 seconds to see if traces eventually appear, as this is the timeout we have configured in the batch processing of the OpenTelemetry collector within step 1.
