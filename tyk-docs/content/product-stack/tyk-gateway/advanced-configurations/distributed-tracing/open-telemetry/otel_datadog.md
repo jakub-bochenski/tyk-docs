@@ -53,7 +53,7 @@ service:
 
 ### Step 2: Configure a test API
 
-If you don't have any APIs configured yet, create a subdirectory called `apps` in the current directory. Create a new file `apidef-hello-world.json` and copy this simple API definition:
+If you don't have any APIs configured yet, create a subdirectory called `apps` in the current directory. Create a new file `apidef-hello-world.json` and copy this very simple API definition for testing purposes:
 
 ```json
 { 
