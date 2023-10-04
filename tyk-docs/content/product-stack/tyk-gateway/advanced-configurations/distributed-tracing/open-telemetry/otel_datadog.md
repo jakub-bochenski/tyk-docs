@@ -22,7 +22,7 @@ Whether you're using Tyk API Gateway in an open-source (OSS) or commercial deplo
 
 You will need:
 - An [API key from Datadog](https://docs.datadoghq.com/account_management/api-app-keys/#add-an-api-key-or-client-token). For example, `6c35dacbf2e16aa8cda85a58d9015c3c`. 
-* Your [Datadog site](https://docs.datadoghq.com/getting_started/site/#access-the-datadog-site). Examples: `datadoghq.com`, `us3.datadoghq.com`, `datadoghq.eu`. 
+- Your [Datadog site](https://docs.datadoghq.com/getting_started/site/#access-the-datadog-site). Examples are: `datadoghq.com`, `us3.datadoghq.com` and `datadoghq.eu`. 
 
 Create a new YAML configuration file named `otel-collector.yml` with the following content:
 
