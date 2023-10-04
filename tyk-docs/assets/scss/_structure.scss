@@ -140,6 +140,18 @@ body {
     font-family: "Inter", sans-serif;
     font-weight: bold;
 }
+
+.see_also_header{
+    font-size: 22px;
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    line-height: 1.3;
+    letter-spacing:0.025em;
+}
+.related_section{
+    margin-top: 30px;
+}
+
 .improve-this-page::before {
     content: "";
     background: url("../img/file.svg");
