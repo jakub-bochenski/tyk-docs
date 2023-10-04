@@ -105,6 +105,7 @@ Each entry in the ignored, blacklist and whitelist have the same specification. 
 ```{.copyWrapper}
 {
   "path": "SOME_PATH",
+  "method": "SOME_METHOD",
   "method_actions": {
     "METHOD": {
       "action": "ACTION_CODE",
@@ -119,6 +120,8 @@ Each entry in the ignored, blacklist and whitelist have the same specification. 
 ```
     
 You can set up the path to handle, and the action type. By default this should be set to `no_action` which means that Tyk will treat the path and method as-is without interference (i.e. if `no_action` is set, then `code`, `data`, `headers` and `body` are *not* used).
+
+If method is not specified it will apply to all methods.
     
 If you set `action` to `reply` Tyk will override the path and reply with settings defined in the remaining fields. This configuration can be used across all of the different path lists, and can be very useful when used in conjunction with the `white_list` access control list as if it is used exclusively it can be used to mock out an entire API.
     
