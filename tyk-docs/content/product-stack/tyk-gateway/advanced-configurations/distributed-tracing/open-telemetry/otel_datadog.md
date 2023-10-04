@@ -5,7 +5,7 @@ tags: ["distributed tracing", "OpenTelemetry", "Datadog"]
 description: "This guide explains how to setup Tyk Gateway with OpenTelemetry and Datadog to enhance API Observability"
 ---
 
-This guide explains how to configure Tyk API Gateway and the OpenTelemetry Collector to collect distributed traces in Datadog. It follows the [reference documentation from Datadog](https://docs.datadoghq.com/opentelemetry/otel_collector_datadog_exporter/?tab=onahost).
+This guide explains how to configure Tyk API Gateway and the OpenTelemetry Collector to collect distributed traces in Datadog. It follows the reference documentation from [Datadog](https://docs.datadoghq.com/opentelemetry/otel_collector_datadog_exporter/?tab=onahost).
 
 While this tutorial demonstrates using an OpenTelemetry Collector running in Docker, the core concepts remain consistent regardless of how and where the OpenTelemetry collector is deployed.
 
