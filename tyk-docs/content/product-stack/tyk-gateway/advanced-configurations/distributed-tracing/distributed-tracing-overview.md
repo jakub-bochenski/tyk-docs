@@ -1,7 +1,7 @@
 ---
 title: "Distributed tracing"
 date: 2023-08-29T16:58:52+03:00
-tags: ["distributed tracing", "opentelemetry", "opentracing", "traces"]
+tags: ["distributed tracing", "OpenTelemetry", "OpenTracing", "traces"]
 description: Overview page to introduce Distirbuted tracing in Tyk
 ---
 
