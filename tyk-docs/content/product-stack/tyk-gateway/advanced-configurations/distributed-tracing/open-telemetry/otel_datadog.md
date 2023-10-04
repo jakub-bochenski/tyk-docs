@@ -1,35 +1,87 @@
 ---
 date: 2023-08-29T13:32:12Z
-title: OpenTelemetry With Datadog
+title: OpenTelemetry with Datadog
 tags: ["distributed tracing", "OpenTelemetry", "Datadog"]
 description: "This guide explains how to setup Tyk Gateway with OpenTelemetry and Datadog to enhance API Observability"
 ---
 
-This guide explains how to configure Tyk API Gateway and the OpenTelemetry Collector to collect distributed traces in Datadog. While it demonstrates using an OpenTelemetry Collector running in Docker, the core concepts remain consistent regardless of how the OpenTelemetry collector is deployed.
+This guide explains how to configure Tyk API Gateway and the OpenTelemetry Collector to collect distributed traces in Datadog. It follows the [reference documentation from Datadog](https://docs.datadoghq.com/opentelemetry/otel_collector_datadog_exporter/?tab=onahost).
+
+While this tutorial demonstrates using an OpenTelemetry Collector running in Docker, the core concepts remain consistent regardless of how and where the OpenTelemetry collector is deployed.
+
+Whether you're using Tyk API Gateway in an open-source (OSS) or commercial deployment, the configuration options remain identical.
 
 ## Prerequisites
 
 - [Docker installed on your machine](https://docs.docker.com/get-docker/)
 - Tyk Gateway v5.2.0 or higher
-- OTel Collector Contrib [docker image](https://hub.docker.com/r/otel/opentelemetry-collector-contrib). Make sure to use this distribution (Contrib) as it is required for the Datadog exporter. 
+- OpenTelemetry Collector Contrib [docker image](https://hub.docker.com/r/otel/opentelemetry-collector-contrib). Make sure to use the Contrib distribution of the OpenTelemetry Collector as it is required for the [Datadog exporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/datadogexporter). 
 
-### Step 1: Tyk Gateway Configuration
 
-For Tyk Gateway to work with OpenTelemetry, modify the default Tyk configuration to include the following OpenTelemetry settings:
+### Step 1: Configure the OpenTelemetry Collector
+
+You will need:
+* An [API key from Datadog](https://docs.datadoghq.com/account_management/api-app-keys/#add-an-api-key-or-client-token). An API key looks like this: `6c35dacbf2e16aa8cda85a58d9015c3c`. 
+* Your [Datadog site](https://docs.datadoghq.com/getting_started/site/#access-the-datadog-site). Examples: `datadoghq.com`, `us3.datadoghq.com`, `datadoghq.eu`. 
+
+Create a new YAML configuration file named `otel-collector.yml` with the following content:
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+processors:
+  batch:
+    send_batch_max_size: 100
+    send_batch_size: 10
+    timeout: 10s
+exporters:
+  datadog:
+    api:
+      site: "YOUR-DATADOG-SITE"
+      key: "YOUR-DATAGOG-API-KEY"
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [datadog]
+
+```
+
+### Step 2: Configure a test API
+
+If you don't have any APIs configured yet, create a subdirectory called `apps` in the current directory. Create a new file `apidef-hello-world.json` and copy this simple API definition:
 
 ```json
-{
-  "opentelemetry": {
-    "enabled": true,
-    "exporter": "grpc",
-    "endpoint": "localhost:4317"
-  }
+{ 
+    "name": "Hello-World",
+    "slug": "hello-world",
+    "api_id": "Hello-World",
+    "org_id": "1",
+    "use_keyless": true,
+    "detailed_tracing": true,
+    "version_data": {
+      "not_versioned": true,
+      "versions": {
+        "Default": {
+          "name": "Default",
+          "use_extended_paths": true
+        }
+      }
+    },
+    "proxy": {
+      "listen_path": "/hello-world/",
+      "target_url": "http://echo.tyk-demo.com:8080/",
+      "strip_listen_path": true
+    },
+    "active": true
 }
 ```
 
-Note that the `endpoint` value is the address of the OpenTelemetry Collector. We will set this up in the next step.
-
-### Step 2: Create the Docker-Compose for the OpenTelemetry Collector
+### Step 3: Create the Docker-Compose file
 
 Save the following YAML configuration to a file named `docker-compose.yml`.
 
@@ -37,225 +89,75 @@ Save the following YAML configuration to a file named `docker-compose.yml`.
 version: "2"
 services:
   # OpenTelemetry Collector Contrib
-  collector-gateway:
+  otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
     volumes:
-      - ./configs/otel-collector.yml:/etc/otel-collector.yml
+      - ./otel-collector.yml:/etc/otel-collector.yml
     command: ["--config=/etc/otel-collector.yml"]
     ports:
-      - "1888:1888" # pprof extension
-      - "13133:13133" # Health check extension
-      - "4317:4317" # OTLP gRPC receiver
-      - "4318:4318" # OTLP HTTP receiver
-      - "55679:55679" # zPages extension
+      - "4317" # OTLP gRPC receiver
+    networks:
+      - tyk
+  
+  # Tyk API Gateway, open-source deployment
+  tyk:
+    image: tykio/tyk-gateway:v5.2
+    ports:
+      - 8080:8080
+    environment:
+      - TYK_GW_OPENTELEMETRY_ENABLED=true
+      - TYK_GW_OPENTELEMETRY_EXPORTER=grpc
+      - TYK_GW_OPENTELEMETRY_ENDPOINT=otel-collector:4317
+    volumes:
+      - ./apps:/opt/tyk-gateway/apps
     depends_on:
-      - jaeger-all-in-one
+      - redis
+    networks:
+      - tyk
+
+  redis:
+    image: redis:4.0-alpine
+    ports:
+      - 6379:6379
+    command: redis-server --appendonly yes
+    networks:
+      - tyk
+
+networks:
+  tyk:
 ```
 
-Run the services by navigating to the directory containing the docker-compose.yml file and executing:
+
+To start the services, go to the directory that contains the docker-compose.yml file and run the following command:
 
 ```bash
 docker-compose up
 ```
 
-### Step 3: Configure the OpenTelemetry Collector
 
-Create a new YAML configuration file named otel-collector.yml with the following content:
+### Step 4: Explore OpenTelemetry traces in Datadog
 
-```yaml
-receivers:
-  otlp:
-    protocols:
-      http:
-        endpoint: 0.0.0.0:4318
-      grpc:
-        endpoint: 0.0.0.0:4317
-processors:
-  batch:
-exporters:
-  jaeger:
-    endpoint: jaeger-all-in-one:14250
-    tls:
-      insecure: true
-extensions:
-  health_check:
-  pprof:
-    endpoint: :1888
-  zpages:
-    endpoint: :55679
-service:
-  extensions: [pprof, zpages, health_check]
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [jaeger]
-```
+Begin by sending a few requests to the API endpoint configured in step 2: 
+``
+http://localhost:8080/hello-world/
+``
 
-### Step 4: Run OSS Tyk Gateway with OpenTelemetry and Jaeger
+Next, log in to Datadog and navigate to the 'APM' / 'Traces' section. Here, you should start observing traces generated by Tyk:
 
-To run Tyk Gateway, you can extend the previous Docker Compose file to include Tyk Gateway and Redis services. Make sure to include the environment variables to configure OpenTelemetry in Tyk Gateway.
+{{< img src="/img/distributed-tracing/opentelemetry/api-gateway-trace-tyk-datadog.png" alt="Tyk API Gateway distributed trace in Datadog" >}}
 
-```yaml
-# ... Existing docker-compose.yml content for jaeger and otel-collector
+Click on a trace to view all its internal spans:
 
-tyk:
-  image: tykio/tyk-gateway:v5.2.0
-  ports:
-    - 8080:8080
-  environment:
-    - TYK_GW_OPENTELEMETRY_ENABLED=true
-    - TYK_GW_OPENTELEMETRY_EXPORTER=grpc
-    - TYK_GW_OPENTELEMETRY_ENDPOINT=otel-collector:4317
-  volumes:
-    - ${TYK_APPS:-./apps}:/opt/tyk-gateway/apps
-  depends_on:
-    - redis
+{{< img src="/img/distributed-tracing/opentelemetry/api-gateway-trace-tyk-datadog-spans.png" alt="Tyk API Gateway spans in Datadog" >}}
 
-redis:
-  image: redis:4.0-alpine
-  ports:
-    - 6379:6379
-  command: redis-server --appendonly yes
-```
+Datadog will generate a service entry to monitor Tyk API Gateway and will automatically compute valuable metrics using the ingested traces.
 
-{{< note success >}}
-**Note**
-
-Indicate the folder containing your APIs by setting the [TYK_GW_APPPATH](https://tyk.io/docs/tyk-oss-gateway/configuration/#app_path) environment variable. By default, the apps folder in the Docker Compose file's location will be used for loading the APIs.
-{{< /note >}}
-
-To run all services, execute:
-
-```bash
-docker-compose up
-```
-
-By following this guide, you should now have a Tyk Gateway setup integrated with OpenTelemetry and Jaeger, providing a powerful observability solution for your APIs.
-
-{{< img src="/img/distributed-tracing/opentelemetry/jaeger-metrics.png" alt="Jaeger Metrics" >}}
-
-</br>
-</br>
+{{< img src="/img/distributed-tracing/opentelemetry/api-gateway-tyk-service-monitoring-datadog.png" alt="Tyk API Gateway service monitoring in Datadog" >}}
 
 
-# Deploying Tyk Gateway with OpenTelemetry and Jaeger on Kubernetes
+### Troubleshooting
 
-## Prerequisites
+If you do not observe any traces appearing in Datadog, consider the following steps for resolution:
 
-- A running Kubernetes cluster
-- kubectl and helm CLI tools installed
-
-### Step 1: Install Jaeger Operator
-
-For the purpose of POC/demo, we can use jaeger-all-in-one, which includes the Jaeger agent, collector, query, and UI in a single pod with in-memory storage.
-
-#### Installation via Jaeger Operator
-
-1. Follow the Jaeger Operator installation guide: [Jaeger Operator Documentation](https://www.jaegertracing.io/docs/1.48/operator/).
-
-2. After the Jaeger Operator is deployed to the `observability` namespace, create a Jaeger instance:
-
-```bash
-
-kubectl apply -n observability -f - <<EOF
-apiVersion: jaegertracing.io/v1
-kind: Jaeger
-metadata:
-  name: jaeger-all-in-one
-EOF
-```
-
-{{< note success >}}
-**Note**
-
-The Jaeger UI will be available at `jaeger-all-in-one-query:16686`.
-{{< /note >}}
-
-### Step 2: Configure OpenTelemetry Collector
-
-#### 1. Create a configuration YAML file, `otel-collector-config.yaml`:
-
-```yaml
-mode: deployment
-config:
-  receivers:
-    otlp:
-      protocols:
-        http:
-          endpoint: ${env:MY_POD_IP}:4318
-        grpc:
-          endpoint: ${env:MY_POD_IP}:4317
-  processors:
-    batch: {}
-  exporters:
-    jaeger:
-      endpoint: "jaeger-all-in-one-collector.observability.svc.cluster.local:14250"
-      tls:
-        insecure: true
-  extensions:
-    health_check: {}
-    pprof:
-      endpoint: :1888
-    zpages:
-      endpoint: :55679
-  service:
-    extensions: [pprof, zpages, health_check]
-    pipelines:
-      traces:
-        receivers: [otlp]
-        processors: [batch]
-        exporters: [jaeger]
-```
-
-#### 2. Install the OpenTelemetry Collector via Helm:
-
-```bash
-helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
-helm install tyk-otel-collector open-telemetry/opentelemetry-collector -n tyk --version 0.62.0 -f otel-collector-config.yaml
-```
-
-### Step 3: Configure Tyk Gateway
-
-#### 1. Configure OpenTelemetry in Tyk by setting environment variables:
-
-You can enable OpenTelemetry in Tyk by modifying its configuration as follows:
-
-```json
-{
-  "opentelemetry": {
-    "enabled": true,
-    "exporter": "grpc",
-    "endpoint": "tyk-otel-collector-opentelemetry-collector:4317"
-  }
-}
-```
-
-Alternatively, set the environment variables in your deployment:
-
-```bash
-TYK_GW_OPENTELEMETRY_ENABLED=true
-TYK_GW_OPENTELEMETRY_EXPORTER=grpc
-TYK_GW_OPENTELEMETRY_ENDPOINT=tyk-otel-collector-opentelemetry-collector:4317
-```
-
-#### 2. Install/Upgrade Tyk using Helm:
-
-To install or upgrade Tyk using Helm, execute the following commands:
-
-```bash
-NAMESPACE=tyk
-APISecret=foo
-TykVersion=v5.2.0
-
-helm upgrade tyk-redis oci://registry-1.docker.io/bitnamicharts/redis -n $NAMESPACE --create-namespace --install
-helm upgrade tyk-otel tyk-helm/tyk-oss -n $NAMESPACE --create-namespace --devel \
-  --install \
-  --set global.secrets.APISecret="$APISecret" \
-  --set global.redis.addrs="{tyk-redis-master.$NAMESPACE.svc.cluster.local:6379}" \
-  --set global.redis.pass="$(kubectl get secret --namespace $NAMESPACE tyk-redis -o jsonpath='{.data.redis-password}' | base64 -d)" \
-  --set tyk-gateway.gateway.image.tag=$TykVersion \
-  --set "tyk-gateway.gateway.extraEnvs[0].name=TYK_GW_OPENTELEMETRY_ENABLED" \
-  --set-string "tyk-gateway.gateway.extraEnvs[0].value=true" \
-  --set "tyk-gateway.gateway
-```
+- Logging: Examine logs from Tyk API Gateway and from the OpenTelemetry Collector for any issues or warnings that might provide insights.
+- Data Ingestion Delays: Be patient, as there could be some delay in data ingestion. Wait for 10 seconds to see if traces eventually appear, as this is the timeout we have configured in the batch processing of the OpenTelemetry collector in step 1.
